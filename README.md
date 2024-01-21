@@ -1,3 +1,4 @@
+
 ## Chapters 
 
 1. [Introduction](#Introduction)
@@ -10,6 +11,9 @@
 8. [Inter-Process Communication API](<#Inter-Process Communication API>)
 9. [Threads](#Threads)
 10. [Thread API](<#Thread API>)
+11. [CPU Scheduling](<#CPU Scheduling>)
+12. [Multi-level Feedback Queue](<#Multi-level Feedback Queue>)
+13. [Lottery Scheduling](<#Lottery Scheduling>)
 
 ## Introduction
 
@@ -115,3 +119,75 @@
 - **pthread_create()** is used to create a thread.
 - **pthread_join()** is used to join a thread to the calling thread.
 - Joining a thread means that the calling thread waits for the joined thread to finish its execution first before executing itself (i.e it blocks itself until then)
+
+## CPU Scheduling
+
+- **Operating system schedulers** and the importance of **context switching** understanding.
+- **Assumptions** about running processes and their impact on **scheduling policies**.
+- Introduction to **scheduling metrics**, primarily focusing on **turnaround time**.
+- Basic algorithm executing the **first arrived job** - **First-Come, First-Served (FCFS)**. **Simplicity** but potential performance issues, e.g., **convoy effect**.
+- Prioritizes the **shortest job** based on remaining execution time - **Shortest Job First (SJF)**. Optimal under certain conditions, potential for **starvation**.
+- Preemptive SJF allowing job switches before completion. Addresses **convoy problem** by prioritizing **shorter jobs** - **Preemptive Shortest Job First (PSJF)**.
+- Introduction of **response time** as a metric. SJF not optimal for response time due to **turnaround time focus**.
+- **Time-slicing algorithm** for fair CPU time distribution - **Round Robin (RR)**. Good for response time but can have higher **turnaround time**.
+- Importance of handling **I/O** in scheduling. Treating each **CPU burst**, including I/O, as an independent job for better **overlap**.
+- Difficulty of accurately predicting job lengths. Need for schedulers performing well without prior knowledge of **job lengths**.
+- Two scheduler families: SJF/STCF for **turnaround time optimization**, RR for **response time**. Balancing trade-offs between **turnaround time** and **response time**. Addresses I/O considerations and challenges in predicting job lengths.
+
+## Multi-level Feedback Queue
+
+- The **Multi-Level Feedback Queue (MLFQ)** scheduler is a well-known approach to scheduling. It aims to optimize **turnaround time** and make the system responsive to **interactive users**.
+- MLFQ addresses the challenge of scheduling without prior knowledge of job lengths, striving to minimize **turnaround time** and **response time** simultaneously.
+- MLFQ learns from the past to predict the future, which is common in **operating systems** and other **CS areas**. It works well when jobs have predictable phases of behavior.
+- MLFQ has distinct queues with different **priority levels**. A job on a higher-priority queue is chosen to run first. Basic rules include **priority-based decision-making** and **round-robin scheduling** among jobs with the same priority.
+- Introduces the concept of **job allotment**, representing the time a job can spend at a given priority. Priority adjustments are based on **job behavior**, using rules for entering the system, using up allotment, and giving up the CPU.
+- It addresses the problem of **starvation** by periodically boosting the priority of all jobs to the **topmost queue**. This ensures progress for **CPU-bound jobs** and proper treatment for **interactive ones**.
+- Improves accounting of **CPU time** to prevent gaming of the scheduler. Redefines rules for using up time allotment and demoting jobs based on better accounting.
+- There are challenges in parameterizing the scheduler, including the number of queues, **time slice length**, and priority boost frequency. 
+- The MLFQ approach as a scheduling method that learns from **job behavior**. List of MLFQ rules:
+   1. **Rule 1:** If Priority(A) > Priority(B), A runs (B doesn’t).
+   2. **Rule 2:** If Priority(A) = Priority(B), A & B run in round-robin fashion using the time slice (quantum length) of the given queue.
+   3. **Rule 3:** When a job enters the system, it is placed at the highest priority (the topmost queue).
+   4. **Rule 4:** Once a job uses up its time allotment at a given level (regardless of how many times it has given up the CPU), its priority is reduced (i.e., it moves down one queue).
+   5. **Rule 5:** After some time period S, move all the jobs in the system to the topmost queue.
+
+## Lottery Scheduling
+
+- **Proportional-Share Scheduling Concepts**
+  - Guarantees each job a certain **percentage** of CPU time
+  - Introduces the concept of "**tickets**" representing a process's share of resources
+  - **Lottery scheduling** is an early example where processes hold tickets, and a lottery determines which process runs next
+
+- **Lottery Scheduling**
+  - Involves periodically holding a lottery to select the next process to run
+  - Processes with more **tickets** have a higher chance of winning the lottery
+  - Utilizes **randomness** for decision-making to achieve probabilistic correctness
+  - Provides **flexibility**, **simplicity**, and **lightweight operation**
+
+- **Ticket Mechanisms**
+  - Introduces mechanisms like **ticket currency**, **ticket transfer**, and **ticket inflation** to manipulate tickets
+  - **Ticket currency** allows users to allocate tickets among their jobs
+  - **Ticket transfer** enables temporary transfer of tickets between processes
+  - **Ticket inflation** allows processes to temporarily adjust their ticket count
+  
+- **Implementation of Lottery Scheduling**
+  - Implements a simple decision-making process using a **random number generator** and a list of processes with tickets
+  - The winning **ticket** determines the next process to run
+  
+- **Stride Scheduling**
+  - A deterministic **fair-share scheduler**, providing precise CPU time proportions
+  - Assigns a "**stride**" value to each process based on its **ticket count**
+  - Utilizes a **pass counter** to determine which process to run next
+  - Provides **exact proportions** at the end of each scheduling cycle
+  
+- **Linux Completely Fair Scheduler (CFS)**
+  - Focuses on **fairness**, **scalability**, and **efficiency** in scheduling
+  - Utilizes **virtual runtime (vruntime)** to evenly distribute CPU time among processes
+  - Employs **red-black trees** to efficiently organize and access running processes
+  - Incorporates controls for process priority through the "**nice**" value and **weight computation**
+  - Handles **sleep/wake scenarios** to avoid starvation without wasting CPU cycles
+  
+- **Efficiency in CFS**
+  - Aims to minimize **scheduling overhead** and spends very little time making scheduling decisions
+  - Uses parameters like **sched latency** and **min granularity** to balance fairness and performance
+  - Efficiently manages process priority using **weights** derived from the **nice** value
