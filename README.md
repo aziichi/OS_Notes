@@ -3,7 +3,7 @@
 
 1. [Introduction](#introduction)
 2. [Operating System Structures](#operating-system-structures)
-3. [File System Structure of Unix/Linux](#file-system-structure-of-unix/linux)
+3. [File System Structure of Unix/Linux](#file-system-structure-of-unix\/linux)
 4. [Processes](#processes)
 5. [The Process API](#the-process-api)
 6. [Limited Direct Execution](#limited-direct-execution)
