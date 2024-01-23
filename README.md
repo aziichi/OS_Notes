@@ -3,7 +3,7 @@
 
 1. [Introduction](#introduction)
 2. [Operating System Structures](#operating-system-structures)
-3. [File System Structure of Unix/Linux](#file-system-structure-of-unix\/linux)
+3. [File System Structure of Linux](#file-system-structure-of-linux)
 4. [Processes](#processes)
 5. [The Process API](#the-process-api)
 6. [Limited Direct Execution](#limited-direct-execution)
@@ -37,7 +37,7 @@
 - Layered Structure
 - Virtual Machines
 
-## File System Structure of Unix/Linux
+## File System Structure of Linux
 
 - It has a **hierarchical structure** with root at the top and other directories and files hanging from it.	```
 ```
