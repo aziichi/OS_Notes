@@ -14,7 +14,9 @@
 11. [CPU Scheduling](<#CPU Scheduling>)
 12. [Multi-level Feedback Queue](<#Multi-level Feedback Queue>)
 13. [Lottery Scheduling](<#Lottery Scheduling>)
-
+14. [Concurrency](#Concurrency)
+15. [Solutions for the Race Condition](<#Solutions for the Race Condition>)
+16. [Conditional Variables and Semaphores](<#Conditional Variables and Semaphores>)
 ## Introduction
 
 - Operating system acts as an interface between user and the hardware. It acts as a resource manager because it provides the virtualization of CPU and main memory. It also handles various tricky concurrency issues and stores files persistently.
@@ -191,3 +193,82 @@
   - Aims to minimize **scheduling overhead** and spends very little time making scheduling decisions
   - Uses parameters like **sched latency** and **min granularity** to balance fairness and performance
   - Efficiently manages process priority using **weights** derived from the **nice** value
+
+
+## Concurrency
+
+- **Concurrency**
+    - Execution of multiple instruction sequences simultaneously.
+    - Occurs in the operating system when multiple process threads run in parallel.
+- **Critical Section:
+    - Piece of code accessing a shared resource, like a variable or data structure.
+- **Race Condition**
+    - Arises when multiple threads enter the critical section simultaneously.
+    - Concurrent updates to the shared data structure may lead to unexpected outcomes.
+- **Indeterminate Program**
+    - Program with one or more race conditions.
+    - Output varies between runs based on the timing of thread executions.
+    - Results in non-deterministic program behavior.
+- **Avoiding Problems**
+    - Threads should use mutual exclusion primitives.
+    - Ensures only one thread enters a critical section at a time.
+    - Eliminates race conditions, leading to deterministic program outputs.
+      
+      
+## Solutions for the Race Condition
+
+- **Atomic Operations**
+	- An atomic operation is an indivisible and uninterruptible operation that occurs in a single, instantaneous step. In the context of critical sections and race conditions, making a critical code section an atomic operation means that the entire section is executed without interruption.
+-  **Mutual Exclusion using Locks**
+	- Mutual exclusion is a synchronization technique that ensures only one thread or process can access a critical section at a time.
+-  **Semaphores**
+	- Semaphores are synchronization objects used to control access to a shared resource by multiple processes or threads. They maintain a count, and operations like wait () and signal () are performed on them.
+- **Use of Flag Variable:**
+    - Not a good solution because it does not fulfill the condition of progress.
+- **Peterson’s Solution:**
+	- It uses two variables, 'turn' and an array of flags, to allow processes to enter their critical sections in a mutually exclusive manner.
+    - Effective for avoiding race conditions but limited to two processes/threads.
+- **Mutex/Locks:**
+    - Used to implement mutual exclusion and prevent race conditions.
+    - Only one thread/process allowed to access the critical section.
+    - **Disadvantages:**
+        -  **Contention**
+            - If one thread acquires the lock, others may be busy waiting.
+            - Risk of infinite waiting if the acquiring thread dies.
+        - **Deadlocks**
+        - **Debugging challenges**
+
+## Conditional Variables and Semaphores
+
+- **Conditional Variable:**
+  - Synchronization primitive for thread synchronization based on a certain condition.
+  - Works in conjunction with a lock.
+  - Threads enter a wait state only when they acquire a lock, releasing it during the wait.
+  - When another thread signals the occurrence of the event, the waiting thread transitions to the running state, reacquires the lock, and resumes execution.
+  - **Use of Conditional Variable**
+    - To avoid busy waiting.
+  - Contention is not present.
+  - In POSIX standard, it has two calls **pthread_cond_wait()** and **pthread_cond_signal()**
+
+- **Semaphores:**
+  - Synchronization method using an integer representing the number of resources.
+  - Allows multiple threads to execute critical sections concurrently.
+  - Different from mutex, which allows only one thread to access a shared resource at a time.
+  - **Binary Semaphore:**
+    - Can have values 0 or 1.
+    - Also known as mutex locks.
+  - **Counting Semaphore:**
+    - Can range over an unrestricted domain.
+    - Controls access to a resource with a finite number of instances.
+- In POSIX standard, it has two calls **sem_wait()** and **sem_post()**
+
+- **Modifying Semaphore Operations:**
+  - To overcome busy waiting, modify wait() and signal() semaphore operations.
+  - When a process executing wait() finds the semaphore value not positive, it blocks itself instead of busy waiting.
+  - The block operation places the process in a waiting queue associated with the semaphore, and the CPU scheduler selects another process to execute.
+
+- **Restarting Blocked Processes:**
+  - A blocked process waiting on semaphore S restarts when another process executes a signal() operation.
+  - Restarting is done through a wakeup() operation, changing the process from the waiting state to the ready state and placing it in the ready queue.
+
+
