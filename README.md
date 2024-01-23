@@ -1,22 +1,22 @@
 
 ## Chapters 
 
-1. [Introduction](#Introduction)
-2. [Operating System Structures](<#Operating System Structures>)
-3. [File System Structure of Unix/Linux](<#File System Structure of Unix/Linux>)
-4. [Processes](#Processes)
-5. [The Process API](<#The Process API>)
-6. [Limited Direct Execution](<#Limited Direct Execution>)
-7. [Inter-Process Communication](<#Inter-Process Communication>)
-8. [Inter-Process Communication API](<#Inter-Process Communication API>)
-9. [Threads](#Threads)
-10. [Thread API](<#Thread API>)
-11. [CPU Scheduling](<#CPU Scheduling>)
-12. [Multi-level Feedback Queue](<#Multi-level Feedback Queue>)
-13. [Lottery Scheduling](<#Lottery Scheduling>)
-14. [Concurrency](#Concurrency)
-15. [Solutions for the Race Condition](<#Solutions for the Race Condition>)
-16. [Conditional Variables and Semaphores](<#Conditional Variables and Semaphores>)
+1. [Introduction](#introduction)
+2. [Operating System Structures](#operating-system-structures)
+3. [File System Structure of Unix/Linux](#file-system-structure-of-unix/linux)
+4. [Processes](#processes)
+5. [The Process API](#the-process-api)
+6. [Limited Direct Execution](#limited-direct-execution)
+7. [Inter-Process Communication](#inter-process-communication)
+8. [Inter-Process Communication API](#inter-process-communication-api)
+9. [Threads](#threads)
+10. [Thread API](#thread-api)
+11. [CPU Scheduling](#cpu-scheduling)
+12. [Multi-level Feedback Queue](#multi-level-feedback-queue)
+13. [Lottery Scheduling](#lottery-scheduling)
+14. [Concurrency](#concurrency)
+15. [Solutions for the Race Condition](#solutions-for-the-race-condition)
+16. [Conditional Variables and Semaphores](#conditional-variables-and-semaphores)
 ## Introduction
 
 - Operating system acts as an interface between user and the hardware. It acts as a resource manager because it provides the virtualization of CPU and main memory. It also handles various tricky concurrency issues and stores files persistently.
