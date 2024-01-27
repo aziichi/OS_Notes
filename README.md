@@ -1,3 +1,4 @@
+# Operating Systems Notes
 
 ## Chapters 
 
@@ -25,6 +26,10 @@
 22. [Free Space Management](#free-space-management)
 21. [Paging](#paging)
 22. [Segmentation](#segmentation)
+23. [Virtual Memory](#virtual-memory)
+24. [Page Replacement Algorithms](#page-replacement-algorithms)
+25. [Thrashing](#thrashing)
+    
 ## Introduction
 
 - Operating system acts as an interface between user and the hardware. It acts as a resource manager because it provides the virtualization of CPU and main memory. It also handles various tricky concurrency issues and stores files persistently.
@@ -457,3 +462,90 @@
 
 - **Hybrid Approach**:
   - Modern system architecture integrates both segmentation and paging in hybrid approach.
+
+ ## Virtual Memory
+- Technique allowing execution of processes partially in memory, using secondary memory as swap space.
+- Provides illusion of large main memory.
+- Programs can exceed physical memory size.
+- Enhances CPU utilization and throughput.
+
+- **Demand Paging**:
+  - Popular virtual memory management method.
+  - Stores least used process pages in secondary memory.
+  - Pages brought into main memory on demand or page fault.
+  - Utilizes valid-invalid bit scheme in page table.
+
+- **Lazy Swapper**:
+  - Swaps pages into memory only when needed.
+  - Considers process as sequence of pages, not contiguous address space.
+
+- **Handling Page Fault**:
+  - Process faults if accessing page not in memory.
+  - OS handles fault:
+    - Checks internal table for validity.
+    - Swaps in page from disk to memory.
+    - Updates page table and restarts interrupted instruction.
+
+- **Pure Demand Paging**:
+  - Extreme form where process starts with no pages in memory.
+  - Pages brought into memory only when required.
+
+- **Advantages of Virtual Memory**:
+  - Increased degree of multi-programming.
+  - Large apps runnable with less physical memory.
+
+- **Disadvantages of Virtual Memory**:
+  - Slower system due to swapping.
+  - Potential for thrashing.
+
+## Page Replacement Algorithms
+- **Page Fault Handling**:
+  - Occurs when process tries to access page not in memory.
+  - OS brings page from swap-space to frame.
+  - Page replacement may be necessary if no free frames available.
+
+- **Page Replacement Algorithms**:
+  - Aim: Minimize page faults.
+  - Types:
+    - **FIFO**:
+      - Oldest page replaced.
+      - Simple but may not perform well.
+      - Vulnerable to Belady’s anomaly.
+    - **Optimal**:
+      - Replaces page not referenced in future.
+      - Lowest page fault rate but difficult to implement.
+    - **Least Recently Used (LRU)**:
+      - Replaces page not used for longest period.
+      - Implemented using counters or stack.
+    - **Counting-based**:
+      - Tracks number of references to each page.
+      - Includes **Least Frequently Used (LFU)** and **Most Frequently Used (MFU)** strategies.
+
+- **Belady’s Anomaly**:
+  - FIFO may increase page faults with more frames, unlike other algorithms.
+
+- **Challenges**:
+  - Optimal algorithm requires future knowledge.
+  - LFU and MFU replacements uncommon due to complexity.
+
+- **Objectives**:
+  - Ensure efficient use of memory.
+  - Minimize page faults and overhead.
+
+## Thrashing 
+- Occurs when a process lacks the necessary frames, leading to frequent page faults.
+- The process repeatedly replaces pages needed immediately, causing continuous faults.
+- Results in the system spending more time on page fault handling than executing processes.
+
+- **Handling Thrashing**:
+  - **Working Set Model**:
+    - Based on the Locality Model.
+    - Sufficient frames are allocated to the process to accommodate the current locality.
+    - Insufficient frames lead to thrashing.
+  - **Page Fault Frequency**:
+    - Thrashing is linked to a high page-fault rate.
+    - Aim to control the page-fault rate:
+      - Establish upper and lower bounds.
+      - Allocate an additional frame if the rate is too high.
+      - Remove a frame if the rate is too low.
+    - Control the page-fault rate to prevent thrashing.
