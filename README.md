@@ -29,6 +29,7 @@
 23. [Virtual Memory](#virtual-memory)
 24. [Page Replacement Algorithms](#page-replacement-algorithms)
 25. [Thrashing](#thrashing)
+26. [Files and Directories](#files-and-directories)
     
 ## Introduction
 
@@ -549,3 +550,41 @@
       - Allocate an additional frame if the rate is too high.
       - Remove a frame if the rate is too low.
     - Control the page-fault rate to prevent thrashing.
+
+## Files and Directories
+- **File**: 
+  - Array of bytes.
+  - **Created**, **read**, **written**, and **deleted**.
+  - Has a low-level name (i-number).
+  
+- **Directory**: 
+  - Collection of tuples containing human-readable names and low-level names.
+  - Each entry maps to another directory or a file.
+  - Special entries: **"."** (refers to itself) and **".."** (refers to parent).
+
+- **Directory Tree/Hierarchy**: 
+  - Organizes files and directories into a tree starting at the **root**.
+
+- **Accessing Files**: 
+  - Process requests permission via system call (usually **open()**).
+  - OS grants permission and returns a **file descriptor**.
+  - File descriptor is a per-process entity in the **open file table**.
+
+- **File Descriptor**: 
+  - Tracks file access, current offset, and other information.
+  - Updated by **read()** and **write()**, or via **lseek()** for random access.
+
+- **Persisting Updates**: 
+  - Use **fsync()** or related calls to update **persistent media**.
+  - Balancing **performance** and **correctness** is crucial.
+
+- **Linking Files**: 
+  - Use **hard links** or **symbolic links** to have multiple names refer to the same file.
+  - Consider strengths and weaknesses of each.
+
+- **Deleting Files**: 
+  - Deleting a file is **unlinking** it from the directory hierarchy.
+
+- **Sharing Mechanisms**: 
+  - **Permissions bits** and **access control lists** enable sharing control.
+  - Access control lists offer more precise control over access and manipulation.
